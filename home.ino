@@ -32,13 +32,8 @@ void setup() {
   
   // Declare all LED as OUTPUT
   for (int current = 0; current < sizeof(LEDS); current++) {
-    pinMode(current, OUTPUT);
+    pinMode(LEDS[current], OUTPUT);
   }
-
-  powerOnLed(LED_SALLEBAIN);
-  powerOnLed(LED_WC);
-  powerOnLed(LED_CHAMBRE1);
-  powerOnLed(LED_CHAMBRE2);
 
   dht.begin();
 }
@@ -102,18 +97,16 @@ void powerOffLed(int id){
  * powerAll()
  * @param char statut
  */
-void powerAll(char statut){
-  char message[50];
-  sprintf(message, "Power %s all leds", statut);
-  Serial.println(message);
-  
-  if (statut == "on") {
+void powerAll(boolean statut){
+  if (statut) {
+    Serial.println("Power on all leds");
     for (int current = 0; current < sizeof(LEDS); current++) {
-      digitalWrite(current, HIGH);
+      digitalWrite(LEDS[current], HIGH);
     }
-  } else if (statut == "off") {
+  } else if (statut == false) {
+    Serial.println("Power off all leds");
     for (int current = 0; current < sizeof(LEDS); current++) {
-      digitalWrite(current, LOW);
+      digitalWrite(LEDS[current], LOW);
     }
   }
 }
@@ -127,10 +120,10 @@ void ledsUpdate(int level){
   sprintf(message, "Leds update with light level %d", level);
   Serial.println(message);
   
-  if (level < 700){
-    powerAll("on");
+  if (level < 150){
+    powerAll(true);
   } else {
-    powerAll("off");
+    powerAll(false);
   } 
 }
 
@@ -144,8 +137,10 @@ void climUpdate(int temperature){
   Serial.println(message);  
 
   if (temperature > 27) {
+    Serial.println("FAN ON");
     digitalWrite(FAN_CLIM, HIGH);
   } else {
+    Serial.println("FAN OFF");
     digitalWrite(FAN_CLIM, LOW);
   }
   
