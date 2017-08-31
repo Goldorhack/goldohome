@@ -35,6 +35,10 @@ void setup() {
     pinMode(LEDS[current], OUTPUT);
   }
 
+  // Fan declaration
+  pinMode(FAN_CLIM, OUTPUT);
+
+  // Temperature init
   dht.begin();
 }
 
@@ -120,7 +124,7 @@ void ledsUpdate(int level){
   sprintf(message, "Leds update with light level %d", level);
   Serial.println(message);
   
-  if (level < 150){
+  if (level < 300){
     powerAll(true);
   } else {
     powerAll(false);
@@ -136,7 +140,7 @@ void climUpdate(int temperature){
   sprintf(message, "Clim update with temperature %d", temperature);
   Serial.println(message);  
 
-  if (temperature > 27) {
+  if (temperature > 26) {
     Serial.println("FAN ON");
     digitalWrite(FAN_CLIM, HIGH);
   } else {
